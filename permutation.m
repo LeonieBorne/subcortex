@@ -11,8 +11,7 @@ perm=1; % random seed
 rng(perm); % shuffle random seed for datasample
 insFile = 'subcortex_mask_part1.nii';
 roiFile = 'subcortex_mask_part1.nii';
-%similarityFolder = 'data/similarity';
-similarityFolder='/home/leonie/Documents/result/PISA/Result/gradientography_TSTAT_with_confounds/similarity';
+similarityFolder = 'data/similarity';
 Vn=2;
 
 % fixed task, permuted cohorts
@@ -71,7 +70,8 @@ for folder=1:2
     savg = zeros(4510,4510); % list of similarity matrices
     ndata=0;
     for i = 1:length(subjArray)
-        dataFile = ['similarity_fmri_fix_',char(subjArray(i)),'.mat']; %%%%
+        %dataFile = ['similarity_fmri_fix_',char(subjArray(i)),'.mat']; 
+        dataFile = char(subjArray(i));
         fprintf(['Include ',dataFile,'\n'])
         similarityFile=[similarityFolder,'/',dataFile];
         load(similarityFile, 's');

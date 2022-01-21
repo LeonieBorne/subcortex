@@ -7,14 +7,13 @@ addpath masks
 addpath functions/gradientography
 
 % Parameters
-%similarityFolder='data/similarity';
-similarityFolder='/home/leonie/Documents/result/PISA/Result/gradientography_TSTAT_with_confounds/similarity';
+similarityFolder='data/similarity';
 resultFolder='result';
 grFolders={'hc', 'cc'};
 %grids={{'subject1.mat', 'subject2.mat'},
   %          {'subject3.mat', 'subject4.mat', 'subject5.mat'}};
-grids={readcell('/home/leonie/Documents/result/PISA/Result/gradientography_age_match/tasks/continuing/cohort//hc/subjects.txt'),
-    readcell('/home/leonie/Documents/result/PISA/Result/gradientography_age_match/tasks/continuing/cohort//cc/subjects.txt')};
+grids={readcell('result/tasks/continuing/cohort//hc/subjects.txt'),
+    readcell('result/tasks/continuing/cohort//cc/subjects.txt')};
 taskFolders={'naive', 'continuing'};
 
 insFile = 'subcortex_mask_part1.nii';
@@ -35,8 +34,8 @@ for t=1:size(taskFolders,2)
         savg = zeros(4510,4510); % list of similarity matrices
         ndata=0;
         for i = 1:length(incids)
-            %subj = char(incids{i});
-            subj = ['similarity_fmri_fix_' char(incids{i}) '.mat']; %%%%
+            subj = char(incids{i});
+            %subj = ['similarity_fmri_fix_' char(incids{i}) '.mat'];
             fprintf(['Include ',subj,'\n'])
             similarityFile=[similarityFolder,'/',subj];
             load(similarityFile, 's');
