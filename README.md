@@ -68,9 +68,13 @@ result
 
 The script will create a permutation folder in each group/task permuted. The output files are used for the visualisation made by the Python scripts below.
 
-## subcortical_projection.py
+## figures.py
 
-## cortical_projection.py
+This python script was used to create the article figures. It includes:
+- eigenmap and magnitude projection on the hippocampus or subcortex mesh
+- graph with the variance explained (need to run variance_explained.m first)
+- cohort and task magnitude comparison (need to run compute_zdiff.m first)
+- eigenmap projection on the cortex
 
 
 
