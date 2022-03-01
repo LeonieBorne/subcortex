@@ -74,7 +74,7 @@ This python script was used to create the article figures. It includes:
 - eigenmap and magnitude projection on the hippocampus or subcortex mesh
 - graph with the variance explained (need to run variance_explained.m first)
 - cohort and task magnitude comparison (need to run compute_zdiff.m first)
-- eigenmap projection on the cortex
+- eigenmap projection on the cortex (need to run compute_cortical_projection.m first)
 
 
 

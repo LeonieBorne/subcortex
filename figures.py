@@ -490,20 +490,24 @@ plt.show()
 # FIGURE. CORTICAL PROJECTION - HC CONTINUING #
 ###############################################
 
-fsaverage = datasets.fetch_surf_fsaverage()
-cmap = plt.get_cmap('jet')
+# parameters
 resultFolder = 'result'
+resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_age_match' ###
+Vn = 3
+grp = 'hc' ###
+task = 'continuing' ###
+hemi = 'right'
+hip_side = 'right'
+hip = 'hippocampus.nii' #'hippocampus_left.nii', 'hippocampus_right.nii', 'hippocampus.nii']:
 
-
-Vn = 2
-hip = 'hippocampus_left_fix.nii' #'hippocampus_left_fix.nii', 'hippocampus_right_fix.nii', 'hippocampus_fix.nii']:
+# load masks
 hip_file = f'masks/{hip}'
 hip_msk = image.load_img(hip_file)
-sub_msk_cropped = image.load_img(f'masks/subcortex_mask_part1_cropped.nii')
-sub_msk_mni = image.load_img(f'masks/subcortex_mask_part1_fix.nii')
+sub_msk_cropped = image.load_img('masks/subcortex_mask_part1_cropped.nii')
+sub_msk_mni = image.load_img('masks/subcortex_mask_part1.nii')
+fsaverage = datasets.fetch_surf_fsaverage()
 
-grp = 'hc'
-task = 'continuing'
+# create figure
 fig = plt.figure(figsize=(15,6), constrained_layout=False)
 grid = gridspec.GridSpec(
     1, 3, left=0., right=1., bottom=0., top=1.,
@@ -514,23 +518,15 @@ interpolation='linear'
 kind='ball'
 radius=3
 n_samples = None
-mask_img = f'masks/cortex.nii'
-
-# EIGEN MAP
+mask_img = 'masks/cortex.nii'
 row = 0
 cmap = plt.get_cmap('jet')
 # cmap = plt.get_cmap('bone_r')
 
-if grp == 'hc':
-    img_file = f'{resultFolder}/projection/boot/{task}/1_eigenvector_projection_{hip}'
-    eig_file = f'{resultFolder}/projection/boot/{task}/1_Vn2_eigenvector.nii'
-else:
-    img_file = f'{resultFolder}/projection/boot/{task}/0_eigenvector_projection_{hip}'
-    eig_file = f'{resultFolder}/projection/boot/{task}/0_Vn2_eigenvector.nii'
-# if grp == 'hcc':
-#     img_file = f'{resultFolder}/tasks/{task}/cohort/{grp}/Vn{Vn}_eigenvector_projection_rand_{hip}'
-# else:
-#     img_file = f'{resultFolder}/tasks/{task}/cohort/{grp}/Vn{Vn}_eigenvector_projection_{hip}'
+img_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector_projection_{hip}'
+eig_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector.nii'
+# img_file = f'{resultFolder}/projection/boot/{task}/1_eigenvector_projection_{hip[:-4]}_fix.nii'
+# eig_file = f'{resultFolder}/projection/boot/{task}/1_Vn{Vn}_eigenvector.nii'
 img = image.load_img(img_file)
 eig = image.load_img(eig_file)
 eig_1d = masking.apply_mask(eig, sub_msk_cropped)
@@ -539,10 +535,18 @@ eig_hip_1d = masking.apply_mask(eig_mni, hip_msk)
 eig_hip = masking.unmask(eig_hip_1d, hip_msk)
 vmin = min(eig_hip_1d)
 vmax = max(eig_hip_1d)
-pial_mesh = fsaverage.pial_left
-infl_mesh = fsaverage.infl_left
-hemi='left'
-cut_coords=[-22]
+print(f'vmin={vmin}, vmax={vmax}')
+if hemi == 'left':
+    pial_mesh = fsaverage.pial_left
+    infl_mesh = fsaverage.infl_left
+else:
+    pial_mesh = fsaverage.pial_right
+    infl_mesh = fsaverage.infl_right
+
+if hip_side == 'left':
+    cut_coords=[-22]
+else:
+    cut_coords=[24]
 texture = surface.vol_to_surf(
     img, pial_mesh, interpolation=interpolation, 
     mask_img=mask_img, kind=kind, radius=radius, n_samples=n_samples)
@@ -579,11 +583,11 @@ plt.show()
 ################################################
 
 Vn = 2
-hip = 'hippocampus_left_fix.nii' #'hippocampus_left_fix.nii', 'hippocampus_right_fix.nii', 'hippocampus_fix.nii']:
+hip = 'hippocampus_left.nii' #'hippocampus_left.nii', 'hippocampus_right.nii', 'hippocampus.nii']:
 hip_file = f'masks/{hip}'
 hip_msk = image.load_img(hip_file)
-sub_msk_cropped = image.load_img(f'masks/subcortex_mask_part1_cropped.nii')
-sub_msk_mni = image.load_img(f'masks/subcortex_mask_part1_fix.nii')
+sub_msk_cropped = image.load_img('masks/subcortex_mask_part1_cropped.nii')
+sub_msk_mni = image.load_img('masks/subcortex_mask_part1.nii')
 
 fig = plt.figure(figsize=(15,20), constrained_layout=False)
 grid = gridspec.GridSpec(
@@ -599,23 +603,14 @@ for grp in ['hc', 'cc']:
         kind='ball'
         radius=3
         n_samples = None
-        mask_img = f'/home/leonie/Documents/source/yetianmed/subcortex/masks/cortex.nii'
-        # EIGEN MAP
+        mask_img = f'masks/cortex.nii'
+
         cmap = plt.get_cmap('jet')
         # cmap = plt.get_cmap('bone_r')
         
-        if grp == 'hc':
-            img_file = f'{resultFolder}/projection/boot/{task}/1_eigenvector_projection_{hip}'
-            eig_file = f'{resultFolder}/projection/boot/{task}/1_Vn2_eigenvector.nii'
-        else:
-            img_file = f'{resultFolder}/projection/boot/{task}/0_eigenvector_projection_{hip}'
-            eig_file = f'{resultFolder}/projection/boot/{task}/0_Vn2_eigenvector.nii'
-        # if grp == 'hcc':
-        #     img_file = f'{resultFolder}/tasks/{task}/cohort/{grp}/Vn{Vn}_eigenvector_projection_rand_{hip}'
-        # else:
-        #     img_file = f'{resultFolder}/tasks/{task}/cohort/{grp}/Vn{Vn}_eigenvector_projection_{hip}'
+        img_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector_projection_{hip}'
+        eig_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector.nii'
         img = image.load_img(img_file)
-        # eig_file = f'{resultFolder}/tasks/{task}/cohort/{grp}/Vn{Vn}_eigenvector_mni.nii'
         eig = image.load_img(eig_file)
         eig_1d = masking.apply_mask(eig, sub_msk_cropped)
         eig_mni = masking.unmask(eig_1d, sub_msk_mni)

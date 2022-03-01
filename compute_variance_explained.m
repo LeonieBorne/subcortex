@@ -1,4 +1,4 @@
-% This script do compute the variance explained
+% This script compute the variance explained
 
 clear
 close all
