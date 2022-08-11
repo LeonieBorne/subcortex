@@ -2,6 +2,8 @@ function cont_model(savg,ind_ins_org,roiFile,Mag,Streamlines,Prefix,Vn)
 % This script generates group-avearged Laplacian eigenmaps and eigenmap's
 % gradient magnitude as well as vector files.
 
+fprintf('Computing Gradient %d\n',Vn-1);
+
 % Compute gradient for roi
 [~,roi_msk]=read(roiFile);
 ind_roi=find(~~roi_msk);
@@ -19,9 +21,6 @@ s=savg(ind_ind_trim,ind_ind_trim);
 ind_ins=ind_roi;
 ins_msk=zeros(size(roi_msk));
 ins_msk(ind_ins)=1;
-
-% Compute gradients
-fprintf('Computing Gradient %d\n',Vn-1);
 
 %Compute Laplacian
 % Null=0; % Compute the null data using gradmNull.m 
