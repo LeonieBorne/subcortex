@@ -15,13 +15,22 @@ import matplotlib.cm as cm
 from matplotlib.colors import ListedColormap, Normalize
 import seaborn as sns
 
+from cmcrameri.cm import batlow 
+# cmap = batlow
+# cmap = plt.get_cmap('jet')
+cmap = plt.get_cmap('viridis')
+# cmap = plt.get_cmap('cividis')
+import cmocean
+# cmap = cmocean.cm.thermal
+
+Vn = 3
 
 ##############################
 # HIPPOCAMPUS/SUBCORTEX MESH #
 ##############################
 
 # create point cloud
-mask_file = 'masks/hippocampus_cropped2.nii.gz'
+mask_file = 'masks/hippocampus_cropped.nii'
 # mask_file = 'masks/subcortex_mask_part1_cropped.nii'
 
 msk = image.load_img(mask_file)
@@ -89,6 +98,9 @@ mesh = [smooth.points, np.array(triangles)]
 ###############################
 
 resultFolder = 'result'
+resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_nimg'
+resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_age_match'
+
 
 grp_folder = 'cohort'
 grps = ['hc', 'cc']
@@ -112,8 +124,8 @@ for grp in grps:
             
             # plot
             ax = fig.add_subplot(grid[i], projection='3d')
-            plotting.plot_surf(mesh, texture, view='anterior', vmin=0,
-                                cmap=plt.get_cmap('jet'), avg_method='mean',
+            plotting.plot_surf(mesh, texture, view='anterior', #vmin=0,
+                                cmap=cmap, avg_method='mean',
                                 axes=ax)
             ax.text(32, 0, 15, 'L', va='center', fontdict={'fontsize':30})
             ax.text(-25, 0, 15, 'R', va='center', fontdict={'fontsize':30})
@@ -150,20 +162,21 @@ ax.axis('off')
 ax.text(0.5, 0, 'Gradient II', ha='center', fontdict={'fontsize':30})
 
 # colorbar
-cax = plt.axes([1.01, 0.2, 0.03, 0.4])
-cbar = fig.colorbar(cm.ScalarMappable(norm=None, cmap=plt.get_cmap('jet')), cax=cax)
+cax = fig.add_axes([1.01, 0.2, 0.03, 0.4])
+cbar = fig.colorbar(cm.ScalarMappable(norm=None, cmap=cmap), cax=cax)
 cbar.set_ticks([])
 cbar.ax.set_title('max', fontdict={'fontsize':30}, pad=20)
-cbar.ax.set_xlabel('0', fontdict={'fontsize':30}, labelpad=20)
+cbar.ax.set_xlabel('min', fontdict={'fontsize':30}, labelpad=20)
 
+fig.savefig(f'/tmp/eigenmaps.png', bbox_inches='tight', dpi=300)
 plt.show()
-
 
 ##############################
 # FIGURE. VARIANCE EXPLAINED #
 ##############################
 
 resultFolder = 'result'
+resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_age_match'
 
 grp_folder = 'cohort'
 grps = ['hc', 'cc']
@@ -204,6 +217,7 @@ grid.fig.tight_layout(w_pad=1)
 ################################
 
 resultFolder = 'result'
+resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_age_match'
 
 grp_folder = 'cohort'
 grps = ['hc', 'cc']
@@ -211,14 +225,13 @@ grps_label = ['Healthy Cohort (HC)', 'Clinical Cohort (CC)']
 
 fontcolor = 'black'
 
-fig = plt.figure(figsize=(21,11), constrained_layout=False)
+fig = plt.figure(figsize=(21,11), constrained_layout=False, dpi=300)
 grid = gridspec.GridSpec(
     3, 5, left=0., right=1., bottom=0., top=1.,
     height_ratios=[0.2,1,1], width_ratios=[0.2,1,1,1,1],
     hspace=0.0, wspace=0.0)
 
 i = 6
-Vn = 3
 for grp in grps:
     for task in ['naive', 'continuing']:
         # for Vn in [2, 3]:
@@ -232,7 +245,7 @@ for grp in grps:
             # plot
             ax = fig.add_subplot(grid[i], projection='3d')
             plotting.plot_surf(mesh, texture, view=view, vmin=0, vmax=0.2,
-                                cmap=plt.get_cmap('jet'), avg_method='mean',
+                                cmap=cmap, avg_method='mean',
                                 axes=ax)
             if view == 'anterior':
                 ax.text(32, 0, 15, 'L', va='center', fontdict={'fontsize':30, 'color':fontcolor})
@@ -271,19 +284,22 @@ ax.axis('off')
 # colorbar
 import matplotlib.cm as cm
 cax = plt.axes([1.03, 0.2, 0.03, 0.4])
-cbar = fig.colorbar(cm.ScalarMappable(norm=None, cmap=plt.get_cmap('jet')), cax=cax)
+cbar = fig.colorbar(cm.ScalarMappable(norm=None, cmap=cmap), cax=cax)
 # cbar.ax.tick_params(labelsize=30)
 cbar.set_ticks([])
 # cbar.set_ticklabels([0, 'max'])
 cbar.ax.set_title('0.2', fontdict={'fontsize':30, 'color':fontcolor}, pad=20)
 cbar.ax.set_xlabel('0', fontdict={'fontsize':30, 'color':fontcolor}, labelpad=20)
 
-plt.show()
-
+# plt.show()
+fig.savefig(f'/tmp/magnitude_Vn{Vn}.png', bbox_inches='tight', dpi=300)
 
 #############################
 # FIGURE. COHORT COMPARISON #
 #############################
+
+resultFolder = 'result'
+resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_age_match'
 
 sort = False
 
@@ -300,8 +316,6 @@ def custom_function(vertices):
 avg_method = custom_function # define function that take the max(|v|)
 # avg_method = 'mean'
 
-resultFolder = 'result'
-
 grp_folder = 'cohort'
 grps = ['hc', 'cc']
 grps_label = ['HC', 'CC']
@@ -309,12 +323,11 @@ grps_label = ['HC', 'CC']
 fontcolor = 'darkslategrey'
 fontcolor='black'
 
-cmap=plt.get_cmap('twilight_shifted')
 twil = cm.get_cmap('twilight_shifted', 1000)
 newcolors = np.vstack((twil(np.linspace(0, 0.3, 400)),
                         twil(np.linspace(0.4, 0.6, 400)),
                         twil(np.linspace(0.7, 1, 400))))
-cmap = ListedColormap(newcolors, name='twilight_shifted_threshold')
+cmap_comp = ListedColormap(newcolors, name='twilight_shifted_threshold')
 # from matplotlib import cm
 # from matplotlib.colors import ListedColormap
 # top = cm.get_cmap('Blues', 100)
@@ -327,14 +340,13 @@ cmap = ListedColormap(newcolors, name='twilight_shifted_threshold')
 # cmap = ListedColormap(newcolors, name='OrangeBlue')
 
 
-fig = plt.figure(figsize=(21,6), constrained_layout=False)
+fig = plt.figure(figsize=(21,6), constrained_layout=False, dpi=300)
 grid = gridspec.GridSpec(
     2, 5, left=0., right=1., bottom=0., top=1.,
     height_ratios=[0.2,1], width_ratios=[0.2,1,1,1,1],
     hspace=0.0, wspace=0.0)
 
 i = 6
-Vn = 2
 # for grp in ['hc', 'cc']:
 for task in ['naive', 'continuing']:
     # texture
@@ -348,7 +360,7 @@ for task in ['naive', 'continuing']:
         # plot
         ax = fig.add_subplot(grid[i], projection='3d')
         plotting.plot_surf(mesh, texture, view=view, vmin=-vmax, vmax=vmax,
-                            cmap=cmap, avg_method=avg_method,
+                            cmap=cmap_comp, avg_method=avg_method,
                             axes=ax)
         if view == 'anterior':
             ax.text(32, 0, 15, 'L', va='center', fontdict={'fontsize':30, 'color':fontcolor})
@@ -379,7 +391,7 @@ ax.axis('off')
 
 # colorbar
 cax = plt.axes([1.03, 0.2, 0.03, 0.4])
-cbar = fig.colorbar(cm.ScalarMappable(norm=Normalize(vmin=-vmax, vmax=vmax), cmap=cmap), cax=cax)
+cbar = fig.colorbar(cm.ScalarMappable(norm=Normalize(vmin=-vmax, vmax=vmax), cmap=cmap_comp), cax=cax)
 cbar.set_ticks([-2,2])
 cbar.set_ticklabels([r'-2$\sigma$',r'2$\sigma$'])
 cbar.ax.tick_params(labelsize=30, labelcolor=fontcolor)
@@ -387,13 +399,16 @@ cbar.ax.set_title(f'{grps_label[1]}>{grps_label[0]}', fontdict={'fontsize':30, '
 cbar.ax.set_xlabel(f'{grps_label[0]}>{grps_label[1]}', fontdict={'fontsize':30, 'color':fontcolor}, labelpad=20)
 
 plt.show()
+fig.savefig(f'/tmp/cohort_comparison_Vn{Vn}.png', bbox_inches='tight', dpi=300)
 
 ###########################
 # FIGURE. TASK COMPARISON #
 ###########################
 
-sort = False
 resultFolder = 'result'
+resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_TSTAT_with_confounds'
+
+sort = False
 
 # projection parameters
 interpolation='nearest'
@@ -407,14 +422,13 @@ def custom_function(vertices):
     return val
 avg_method = custom_function # define function that take the max(|v|)
 
-cmap=plt.get_cmap('twilight_shifted')
 from matplotlib import cm
 from matplotlib.colors import ListedColormap
 twil = cm.get_cmap('twilight_shifted', 1000)
 newcolors = np.vstack((twil(np.linspace(0, 0.3, 400)),
                         twil(np.linspace(0.4, 0.6, 400)),
                         twil(np.linspace(0.7, 1, 400))))
-cmap = ListedColormap(newcolors, name='twilight_shifted_threshold')
+cmap_comp = ListedColormap(newcolors, name='twilight_shifted_threshold')
 # top = cm.get_cmap('Blues', 100)
 # middle = cm.get_cmap('Greys', 1000)
 # bottom = cm.get_cmap('Oranges', 100)
@@ -425,14 +439,13 @@ cmap = ListedColormap(newcolors, name='twilight_shifted_threshold')
 # cmap = ListedColormap(newcolors, name='OrangeBlue')
 
 
-fig = plt.figure(figsize=(21,6), constrained_layout=False)
+fig = plt.figure(figsize=(21,6), constrained_layout=False, dpi=300)
 grid = gridspec.GridSpec(
     2, 5, left=0., right=1., bottom=0., top=1.,
     height_ratios=[0.2,1], width_ratios=[0.2,1,1,1,1],
     hspace=0.0, wspace=0.0)
 
 i = 6
-Vn = 2
 for grp in ['hc', 'cc']:
     # texture
     mag_file = f'{resultFolder}/cohort/{grp}/tasks/Vn{Vn}_z_continuing-naive.nii'
@@ -445,7 +458,7 @@ for grp in ['hc', 'cc']:
         # plot
         ax = fig.add_subplot(grid[i], projection='3d')
         plotting.plot_surf(mesh, texture, view=view, vmin=-vmax, vmax=vmax,
-                            cmap=cmap, avg_method=avg_method,
+                            cmap=cmap_comp, avg_method=avg_method,
                             axes=ax)
         if view == 'anterior':
             ax.text(32, 0, 15, 'L', va='center', fontdict={'fontsize':30})
@@ -476,15 +489,16 @@ ax.axis('off')
 
 # colorbar
 cax = plt.axes([1.08, 0.2, 0.03, 0.4])
-cbar = fig.colorbar(cm.ScalarMappable(norm=Normalize(vmin=-vmax, vmax=vmax), cmap=cmap), cax=cax)
+cbar = fig.colorbar(cm.ScalarMappable(norm=Normalize(vmin=-vmax, vmax=vmax), cmap=cmap_comp), cax=cax)
 cbar.set_ticks([-2,2])
 cbar.set_ticklabels([r'-2$\sigma$',r'2$\sigma$'])
 cbar.ax.tick_params(labelsize=30)
 cbar.ax.set_title('CONT>NAIVE', fontdict={'fontsize':30}, pad=20)
 cbar.ax.set_xlabel('NAIVE>CONT', fontdict={'fontsize':30}, labelpad=20)
 
-plt.show()
 
+plt.show()
+fig.savefig(f'/tmp/task_comparison_Vn{Vn}.png', bbox_inches='tight', dpi=300)
 
 ###############################################
 # FIGURE. CORTICAL PROJECTION - HC CONTINUING #
@@ -493,12 +507,14 @@ plt.show()
 # parameters
 resultFolder = 'result'
 resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_age_match' ###
-Vn = 3
+# resultFolder = '/home/leonie/Documents/result/PISA/Result/gradientography_TSTAT_with_confounds' ###
+
+Vn = 2
 grp = 'hc' ###
 task = 'continuing' ###
-hemi = 'right'
-hip_side = 'right'
-hip = 'hippocampus.nii' #'hippocampus_left.nii', 'hippocampus_right.nii', 'hippocampus.nii']:
+hemi = 'left'
+hip_side = 'left'
+hip = 'hippocampus_left.nii' #'hippocampus_left.nii', 'hippocampus_right.nii', 'hippocampus.nii']:
 
 # load masks
 hip_file = f'masks/{hip}'
@@ -520,10 +536,10 @@ radius=3
 n_samples = None
 mask_img = 'masks/cortex.nii'
 row = 0
-cmap = plt.get_cmap('jet')
+cmap = cmap
 # cmap = plt.get_cmap('bone_r')
 
-img_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector_projection_{hip}'
+img_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}eigenvector_projection_{hip}'
 eig_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector.nii'
 # img_file = f'{resultFolder}/projection/boot/{task}/1_eigenvector_projection_{hip[:-4]}_fix.nii'
 # eig_file = f'{resultFolder}/projection/boot/{task}/1_Vn{Vn}_eigenvector.nii'
@@ -576,7 +592,16 @@ disp = plotting.plot_img(
     axes=ax, cut_coords=cut_coords, colorbar=False, annotate=False)
 disp.annotate(size=25)
 
+# colorbar
+cax = plt.axes([1.05, 0.32, 0.03, 0.4])
+cbar = fig.colorbar(cm.ScalarMappable(norm=None, cmap=cmap), cax=cax)
+cbar.set_ticks([])
+cbar.ax.set_title('max', fontdict={'fontsize':30}, pad=20)
+cbar.ax.set_xlabel('min', fontdict={'fontsize':30}, labelpad=20)
+
 plt.show()
+
+fig.savefig(f'/tmp/cortical_projection_{Vn}.png', bbox_inches='tight', dpi=300)
 
 ################################################
 # FIGURE. CORTICAL PROJECTIONS - SUPP MATERIAL #
@@ -605,10 +630,10 @@ for grp in ['hc', 'cc']:
         n_samples = None
         mask_img = f'masks/cortex.nii'
 
-        cmap = plt.get_cmap('jet')
+        cmap = cmap
         # cmap = plt.get_cmap('bone_r')
         
-        img_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector_projection_{hip}'
+        img_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}eigenvector_projection_{hip}'
         eig_file = f'{resultFolder}/projection/{grp}/{task}/Vn{Vn}_eigenvector.nii'
         img = image.load_img(img_file)
         eig = image.load_img(eig_file)
