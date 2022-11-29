@@ -27,7 +27,22 @@ for Vn=[2 3]
         else
             grp='hc';
         end
-        compute_zdiff(['cohort/',char(grp),'/tasks'], Vn, nperm);
+        compute_zdiff([resultFolder,'/cohorts/',char(grp),'/tasks'], Vn, nperm);
+    end
+end
+
+%% Compute z-diff: BACKGROUND - TASKS
+for Vn=[2]
+    for grp={'cc_c_rs','cc_n_rs','hc_c_rs','hc_n_rs'}
+        for task={'naive', 'continuing', 'resting_state'}
+            if isfolder([resultFolder,'/cohorts/',char(grp),'/tasks/',char(task)])
+                grp=char(grp);
+                source=[resultFolder,'/tasks/',char(task),'/cohorts/',grp(1:2),'/Vn',int2str(Vn),'_magnitude.nii'];
+                destination=[resultFolder,'/cohorts/',char(grp),'/tasks/',char(task)];
+                copyfile(source, destination);
+            end
+        end
+        compute_zdiff([resultFolder,'/cohorts/',char(grp),'/tasks'], Vn, nperm);
     end
 end
 

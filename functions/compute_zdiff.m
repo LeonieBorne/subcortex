@@ -10,7 +10,7 @@ function [] = compute_zdiff(folder, Vn, nperm)
             end
         end
     end
-    if length(grpArray) ~= 2
+    if length(grpArray) > 2
         fprintf('\nERROR: too many groups detected\n')
     end
     grpArray = sort(grpArray);

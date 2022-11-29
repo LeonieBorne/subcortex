@@ -13,8 +13,8 @@ for g=1:2
     for t=1:2
         
         if t==1
-            task='naive';
-            fprintf('\n **** NAIVE **** \n');
+            task='resting_state';
+            fprintf('\n **** BACKGROUND **** \n');
         else 
             task='continuing';
             fprintf('\n **** CONTINUING **** \n');
@@ -60,12 +60,12 @@ for g=1:2
         ins_msk=zeros(size(roi_msk));
         ins_msk(ind_ins)=1;
 
-% hf=figure;
-% imagesc(s);
-% colormap(flipud(bone))
-% set(gca,'xtick',[])
-% set(gca,'ytick',[])
-% saveas(hf,['/tmp/savg.png']);
+	% hf=figure;
+	% imagesc(s);
+	% colormap(flipud(bone))
+	% set(gca,'xtick',[])
+	% set(gca,'ytick',[])
+	% saveas(hf,['/tmp/savg.png']);
 
         %% img_pca=connectopic_laplacian(s,ind_ins,N,Vn);
 
@@ -90,12 +90,12 @@ for g=1:2
         dns=dns(i);
         w_thresh=w_thresh+w_thresh';
 
-% hf=figure;
-% imagesc(w_thresh);
-% colormap(flipud(bone))
-% set(gca,'xtick',[])
-% set(gca,'ytick',[])
-% saveas(hf,['/tmp/w_thresh.png']);
+	% hf=figure;
+	% imagesc(w_thresh);
+	% colormap(flipud(bone))
+	% set(gca,'xtick',[])
+	% set(gca,'ytick',[])
+	% saveas(hf,['/tmp/w_thresh.png']);
 
         fprintf('Computing Laplacian\n');
         L=diag(sum(w_thresh))-w_thresh;
@@ -103,14 +103,14 @@ for g=1:2
         fprintf('Finding eigenvectors\n');
         [eigenv,eigend]=eig(L);d=diag(eigend);
 
-% hf=figure;
-% imagesc(eigenv(:,1:3));
-% colormap(flipud(bone))
-% set(gca,'xtick',[])
-% set(gca,'ytick',[])
-% c=colorbar
-% c.Ticks=[] 
-% saveas(hf,['/tmp/gradients.png']);
+        hf=figure;
+        imagesc(eigenv(:,1:3));
+        colormap(flipud(bone))
+        set(gca,'xtick',[])
+        set(gca,'ytick',[])
+        c=colorbar;
+        c.Ticks=[];
+        saveas(hf,['/tmp/gradients_task_',char(task),'_grp_',char(grp),'.png']);
 
         % Variance explained
         per=1./d(2:end);

@@ -10,15 +10,15 @@ addpath functions/gradientography
 similarityFolder='data/similarity';
 resultFolder='result';
 grFolders={'hc', 'cc'};
-%grids={{'subject1.mat', 'subject2.mat'},
-  %          {'subject3.mat', 'subject4.mat', 'subject5.mat'}};
-grids={readcell('result/tasks/continuing/cohort//hc/subjects.txt'),
-    readcell('result/tasks/continuing/cohort//cc/subjects.txt')};
+grids={{'subject1.mat', 'subject2.mat'},
+       {'subject3.mat', 'subject4.mat', 'subject5.mat'}};
+%grids={readcell('result/tasks/continuing/cohorts/hc/subjects.txt'),
+%       readcell('result/tasks/continuing/cohorts/cc/subjects.txt')};
 taskFolders={'naive', 'continuing'};
 
 insFile = 'subcortex_mask_part1.nii';
 roiFile = 'subcortex_mask_part1.nii';
-Vn=2;
+Vn=3;
 
 % Compute gradients
 for t=1:size(taskFolders,2)
@@ -43,7 +43,8 @@ for t=1:size(taskFolders,2)
             ndata=ndata+1;
         end
         savg=savg/ndata;
-        save([rpath,'savg.mat'],'savg');    
+        save([rpath,'savg.mat'],'savg');   
+%        load([rpath,'savg.mat'],'savg');
 
         % 2.Map functional connectivity gradient
         Prefix=rpath;
