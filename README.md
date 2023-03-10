@@ -7,6 +7,8 @@ We adapted the pipeline using psychophysiological interactions (PPI) to study th
 Most of the Matlab scripts described below are adaptations of the [gradientography pipeline available on github](https://github.com/yetianmed/subcortex).
 Results visualizations are done in Python, using [Nilearn](https://nilearn.github.io).
 
+More information on the pipeline is accessible in our paper ["Functional re-organization of hippocampal-cortical gradients during naturalistic memory processes." (Borne et al. 2023)](https://doi.org/10.1016/j.neuroimage.2023.119996). Our reviewer response is accessible [here](./NIMG_22_939_revisions.pdf).
+
 ## preprocessing.m
 
 This script do a few additional preprocessing steps on top of HCP minimal preprocessing pipeline (Glasser et al 2013).
